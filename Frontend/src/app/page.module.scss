@@ -92,6 +92,11 @@
   gap: 2.5rem;
   justify-content: center;
   align-items: flex-start;
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
 }
 
 .courseCard {

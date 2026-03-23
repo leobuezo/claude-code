@@ -3,8 +3,8 @@
  * Tests unitarios para el componente de calificación con estrellas
  */
 
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { StarRating } from '../StarRating';
 
@@ -182,6 +182,279 @@ describe('StarRating Component', () => {
       render(<StarRating rating={4.5} readonly={true} showCount={true} totalRatings={50} />);
 
       expect(screen.getByText('(50)')).toBeInTheDocument();
+    });
+  });
+
+  describe('Interactive Mode', () => {
+    it('renders buttons when interactive prop is true', () => {
+      const onRatingChange = vi.fn();
+      const { container } = render(
+        <StarRating rating={0} interactive={true} onRatingChange={onRatingChange} />
+      );
+
+      const buttons = container.querySelectorAll('button');
+      expect(buttons).toHaveLength(5);
+    });
+
+    it('renders buttons when onRatingChange is provided (without readonly)', () => {
+      const onRatingChange = vi.fn();
+      const { container } = render(
+        <StarRating rating={0} onRatingChange={onRatingChange} />
+      );
+
+      const buttons = container.querySelectorAll('button');
+      expect(buttons).toHaveLength(5);
+    });
+
+    it('calls onRatingChange with correct value when star is clicked', () => {
+      const onRatingChange = vi.fn();
+      render(
+        <StarRating rating={0} interactive={true} onRatingChange={onRatingChange} />
+      );
+
+      const buttons = screen.getAllByRole('button');
+      fireEvent.click(buttons[2]); // Estrella 3
+
+      expect(onRatingChange).toHaveBeenCalledWith(3);
+      expect(onRatingChange).toHaveBeenCalledTimes(1);
+    });
+
+    it('calls onRatingChange with value 1 when first star is clicked', () => {
+      const onRatingChange = vi.fn();
+      render(
+        <StarRating rating={0} interactive={true} onRatingChange={onRatingChange} />
+      );
+
+      const buttons = screen.getAllByRole('button');
+      fireEvent.click(buttons[0]); // Estrella 1
+
+      expect(onRatingChange).toHaveBeenCalledWith(1);
+    });
+
+    it('calls onRatingChange with value 5 when last star is clicked', () => {
+      const onRatingChange = vi.fn();
+      render(
+        <StarRating rating={0} interactive={true} onRatingChange={onRatingChange} />
+      );
+
+      const buttons = screen.getAllByRole('button');
+      fireEvent.click(buttons[4]); // Estrella 5
+
+      expect(onRatingChange).toHaveBeenCalledWith(5);
+    });
+
+    it('does not call onRatingChange when disabled', () => {
+      const onRatingChange = vi.fn();
+      render(
+        <StarRating
+          rating={0}
+          interactive={true}
+          onRatingChange={onRatingChange}
+          disabled={true}
+        />
+      );
+
+      const buttons = screen.getAllByRole('button');
+      fireEvent.click(buttons[2]);
+
+      expect(onRatingChange).not.toHaveBeenCalled();
+    });
+
+    it('does not call onRatingChange when readonly is true even with interactive', () => {
+      const onRatingChange = vi.fn();
+      const { container } = render(
+        <StarRating
+          rating={3}
+          interactive={true}
+          readonly={true}
+          onRatingChange={onRatingChange}
+        />
+      );
+
+      // readonly=true should override interactive=true, no buttons rendered
+      const buttons = container.querySelectorAll('button');
+      expect(buttons).toHaveLength(0);
+    });
+
+    it('has role="group" in interactive mode', () => {
+      const onRatingChange = vi.fn();
+      render(
+        <StarRating rating={3} interactive={true} onRatingChange={onRatingChange} />
+      );
+
+      expect(screen.getByRole('group')).toBeInTheDocument();
+    });
+
+    it('each button has correct aria-label', () => {
+      const onRatingChange = vi.fn();
+      render(
+        <StarRating rating={0} interactive={true} onRatingChange={onRatingChange} />
+      );
+
+      expect(screen.getByRole('button', { name: 'Rate 1 star' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Rate 2 stars' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Rate 3 stars' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Rate 4 stars' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Rate 5 stars' })).toBeInTheDocument();
+    });
+
+    it('applies hover class when mouse enters a star', () => {
+      const onRatingChange = vi.fn();
+      const { container } = render(
+        <StarRating rating={0} interactive={true} onRatingChange={onRatingChange} />
+      );
+
+      const buttons = container.querySelectorAll('button');
+      fireEvent.mouseEnter(buttons[2]); // Hover sobre estrella 3
+
+      // Las estrellas 1, 2, 3 deben tener clase hover
+      expect(buttons[0]).toHaveClass('hover');
+      expect(buttons[1]).toHaveClass('hover');
+      expect(buttons[2]).toHaveClass('hover');
+      // Las estrellas 4 y 5 no deben tener clase hover
+      expect(buttons[3]).not.toHaveClass('hover');
+      expect(buttons[4]).not.toHaveClass('hover');
+    });
+
+    it('removes hover class when mouse leaves stars container', () => {
+      const onRatingChange = vi.fn();
+      const { container } = render(
+        <StarRating rating={0} interactive={true} onRatingChange={onRatingChange} />
+      );
+
+      const buttons = container.querySelectorAll('button');
+      const starsContainer = container.querySelector('.starRating') as HTMLElement;
+
+      fireEvent.mouseEnter(buttons[2]); // Hover sobre estrella 3
+      expect(buttons[0]).toHaveClass('hover');
+
+      fireEvent.mouseLeave(starsContainer); // Mouse sale del contenedor
+
+      // Todas las estrellas deben perder la clase hover
+      buttons.forEach((button) => {
+        expect(button).not.toHaveClass('hover');
+      });
+    });
+
+    it('does not show hover state when disabled', () => {
+      const onRatingChange = vi.fn();
+      const { container } = render(
+        <StarRating
+          rating={0}
+          interactive={true}
+          onRatingChange={onRatingChange}
+          disabled={true}
+        />
+      );
+
+      const buttons = container.querySelectorAll('button');
+      fireEvent.mouseEnter(buttons[2]);
+
+      expect(buttons[0]).not.toHaveClass('hover');
+    });
+
+    describe('Keyboard Navigation', () => {
+      it('calls onRatingChange when Enter key is pressed', () => {
+        const onRatingChange = vi.fn();
+        render(
+          <StarRating rating={0} interactive={true} onRatingChange={onRatingChange} />
+        );
+
+        const button = screen.getByRole('button', { name: 'Rate 3 stars' });
+        fireEvent.keyDown(button, { key: 'Enter' });
+
+        expect(onRatingChange).toHaveBeenCalledWith(3);
+      });
+
+      it('calls onRatingChange when Space key is pressed', () => {
+        const onRatingChange = vi.fn();
+        render(
+          <StarRating rating={0} interactive={true} onRatingChange={onRatingChange} />
+        );
+
+        const button = screen.getByRole('button', { name: 'Rate 4 stars' });
+        fireEvent.keyDown(button, { key: ' ' });
+
+        expect(onRatingChange).toHaveBeenCalledWith(4);
+      });
+
+      it('does not call onRatingChange on keyboard events when disabled', () => {
+        const onRatingChange = vi.fn();
+        render(
+          <StarRating
+            rating={0}
+            interactive={true}
+            onRatingChange={onRatingChange}
+            disabled={true}
+          />
+        );
+
+        const buttons = screen.getAllByRole('button');
+        fireEvent.keyDown(buttons[2], { key: 'Enter' });
+
+        expect(onRatingChange).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('Accessibility in Interactive Mode', () => {
+      it('buttons are disabled when disabled prop is true', () => {
+        const onRatingChange = vi.fn();
+        render(
+          <StarRating
+            rating={0}
+            interactive={true}
+            onRatingChange={onRatingChange}
+            disabled={true}
+          />
+        );
+
+        const buttons = screen.getAllByRole('button');
+        buttons.forEach((button) => {
+          expect(button).toBeDisabled();
+        });
+      });
+
+      it('buttons have tabIndex 0 when not disabled', () => {
+        const onRatingChange = vi.fn();
+        render(
+          <StarRating rating={0} interactive={true} onRatingChange={onRatingChange} />
+        );
+
+        const buttons = screen.getAllByRole('button');
+        buttons.forEach((button) => {
+          expect(button).toHaveAttribute('tabindex', '0');
+        });
+      });
+
+      it('buttons have tabIndex -1 when disabled', () => {
+        const onRatingChange = vi.fn();
+        render(
+          <StarRating
+            rating={0}
+            interactive={true}
+            onRatingChange={onRatingChange}
+            disabled={true}
+          />
+        );
+
+        const buttons = screen.getAllByRole('button');
+        buttons.forEach((button) => {
+          expect(button).toHaveAttribute('tabindex', '-1');
+        });
+      });
+
+      it('selected star has aria-pressed true', () => {
+        const onRatingChange = vi.fn();
+        render(
+          <StarRating rating={3} interactive={true} onRatingChange={onRatingChange} />
+        );
+
+        const button3 = screen.getByRole('button', { name: 'Rate 3 stars' });
+        expect(button3).toHaveAttribute('aria-pressed', 'true');
+
+        const button4 = screen.getByRole('button', { name: 'Rate 4 stars' });
+        expect(button4).toHaveAttribute('aria-pressed', 'false');
+      });
     });
   });
 });

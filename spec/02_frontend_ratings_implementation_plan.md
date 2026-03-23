@@ -1833,75 +1833,75 @@ try {
 ## Checklist de Implementación
 
 ### FASE 1: Types & Interfaces
-- [ ] Crear interfaces `CourseRating`, `RatingRequest`, `RatingStats`
-- [ ] Actualizar interface `Course` con campos opcionales
-- [ ] Crear tipos de estado: `RatingState`, `RatingError`
-- [ ] Implementar type guards: `isValidRating`, `isCourseRating`
-- [ ] Verificar TypeScript strict compliance (no `any`)
+- [x] Crear interfaces `CourseRating`, `RatingRequest`, `RatingStats`
+- [x] Actualizar interface `Course` con campos opcionales
+- [x] Crear tipos de estado: `RatingState`, `RatingError`
+- [x] Implementar type guards: `isValidRating`, `isCourseRating`
+- [x] Verificar TypeScript strict compliance (no `any`)
 
 ### FASE 2: API Service Layer
-- [ ] Crear archivo `ratingsApi.ts` en `src/services/`
+- [x] Crear archivo `ratingsApi.ts` en `src/services/`
 - [ ] Configurar environment variable `NEXT_PUBLIC_API_URL`
-- [ ] Implementar `fetchWithTimeout` helper
-- [ ] Implementar `handleApiResponse` helper
-- [ ] Crear clase `ApiError` customizada
-- [ ] Implementar `getCourseRatings`
-- [ ] Implementar `addCourseRating`
-- [ ] Implementar `updateCourseRating`
-- [ ] Implementar `deleteCourseRating`
+- [x] Implementar `fetchWithTimeout` helper
+- [x] Implementar `handleApiResponse` helper
+- [x] Crear clase `ApiError` customizada
+- [x] Implementar `getCourseRatings`
+- [x] Implementar `addCourseRating` (implementado como `createRating`)
+- [x] Implementar `updateCourseRating` (implementado como `updateRating`)
+- [x] Implementar `deleteCourseRating` (implementado como `deleteRating`)
 - [ ] Implementar `getCourseWithRatings`
 - [ ] Crear tests unitarios del service
-- [ ] Validar manejo de errores HTTP
+- [x] Validar manejo de errores HTTP
 
 ### FASE 3: StarRating Component
-- [ ] Crear estructura de carpeta `StarRating/`
-- [ ] Implementar `StarRating.tsx` con props interface
-- [ ] Crear estados internos (hover, submitting)
-- [ ] Implementar event handlers (click, hover, keyboard)
-- [ ] Crear `StarIcon` sub-component con SVG
-- [ ] Implementar lógica de half-stars
-- [ ] Crear `StarRating.module.scss` con size variants
-- [ ] Implementar ARIA labels y roles
-- [ ] Añadir keyboard navigation (Arrow keys, Enter, Escape)
-- [ ] Crear tests de renderizado
-- [ ] Crear tests de interactividad
-- [ ] Crear tests de accesibilidad
-- [ ] Validar focus styles visibles
+- [x] Crear estructura de carpeta `StarRating/`
+- [x] Implementar `StarRating.tsx` con props interface
+- [x] Crear estados internos (hover, submitting)
+- [x] Implementar event handlers (click, hover, keyboard)
+- [x] Crear `StarIcon` sub-component con SVG
+- [x] Implementar lógica de half-stars
+- [x] Crear `StarRating.module.scss` con size variants
+- [x] Implementar ARIA labels y roles
+- [x] Añadir keyboard navigation (Arrow keys, Enter, Escape)
+- [x] Crear tests de renderizado
+- [x] Crear tests de interactividad
+- [x] Crear tests de accesibilidad
+- [x] Validar focus styles visibles
 
 ### FASE 4: Integration en Components
-- [ ] Actualizar props de `Course` component
-- [ ] Añadir `StarRating` readonly en Course card
-- [ ] Actualizar `Course.module.scss` para rating section
-- [ ] Crear `RatingSection.tsx` como Client Component
-- [ ] Implementar estados de `RatingSection`
-- [ ] Crear `useEffect` para cargar user rating
-- [ ] Implementar `handleRatingChange` con optimistic updates
-- [ ] Crear helper `calculateOptimisticAverage`
-- [ ] Implementar rollback strategy en errores
-- [ ] Crear `RatingSection.module.scss`
-- [ ] Integrar `RatingSection` en `CourseDetail`
-- [ ] Actualizar `page.tsx` para incluir rating data
-- [ ] Validar fallbacks si backend no envía rating fields
+- [x] Actualizar props de `Course` component
+- [x] Añadir `StarRating` readonly en Course card
+- [x] Actualizar `Course.module.scss` para rating section
+- [x] Crear `RatingSection.tsx` como Client Component
+- [x] Implementar estados de `RatingSection`
+- [x] Crear `useEffect` para cargar user rating
+- [x] Implementar `handleRatingChange` con optimistic updates
+- [x] Crear helper `calculateOptimisticAverage`
+- [x] Implementar rollback strategy en errores
+- [x] Crear `RatingSection.module.scss`
+- [x] Integrar `RatingSection` en `CourseDetail`
+- [x] Actualizar `page.tsx` para incluir rating data
+- [x] Validar fallbacks si backend no envía rating fields
 
 ### FASE 5: State Management & UX
-- [ ] Implementar feedback visual (loading, error, success)
-- [ ] Añadir animaciones de submit exitoso
-- [ ] Implementar timeout automático de mensajes
+- [x] Implementar feedback visual (loading, error, success)
+- [x] Añadir animaciones de submit exitoso
+- [x] Implementar timeout automático de mensajes
 - [ ] (Opcional) Añadir localStorage caché
 - [ ] (Opcional) Implementar retry automático
 - [ ] (Opcional) Detectar offline y auto-retry
-- [ ] Validar estados disabled durante API calls
-- [ ] Verificar que no haya memory leaks (cleanup effects)
+- [x] Validar estados disabled durante API calls
+- [x] Verificar que no haya memory leaks (cleanup effects)
 
 ### FASE 6: Testing
-- [ ] Completar tests de `StarRating`
-- [ ] Completar tests de `RatingSection`
-- [ ] Actualizar tests de `Course` component
-- [ ] Ejecutar tests de accesibilidad con axe
+- [x] Completar tests de `StarRating`
+- [x] Completar tests de `RatingSection`
+- [x] Actualizar tests de `Course` component
+- [x] Ejecutar tests de accesibilidad con axe
 - [ ] Validar cobertura de tests >= 85%
 - [ ] (Opcional) Crear visual regression tests
-- [ ] Ejecutar `yarn test` y verificar todos pasan
-- [ ] Verificar TypeScript compilation sin errores
+- [x] Ejecutar `yarn test` y verificar todos pasan
+- [x] Verificar TypeScript compilation sin errores
 
 ### Validación Final
 - [ ] Ejecutar `yarn dev` y probar flujo completo
