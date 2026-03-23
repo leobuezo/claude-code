@@ -1,0 +1,70 @@
+@import '../../styles/vars.scss';
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.ratingSection {
+  margin-top: 2rem;
+  padding: 2rem;
+  background: color('off-white');
+  border-radius: 12px;
+  border: 1px solid color('light-gray');
+
+  .userRating {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid color('light-gray');
+
+    .title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: color('text-primary');
+      margin-bottom: 1rem;
+    }
+
+    .loadingText {
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      color: color('text-secondary');
+    }
+
+    .errorText {
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      background: rgba(255, 45, 45, 0.1);
+      color: color('primary');
+      border-radius: 4px;
+      font-size: 0.875rem;
+    }
+
+    .successText {
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      background: rgba(45, 122, 45, 0.1);
+      color: #2d7a2d;
+      border-radius: 4px;
+      font-size: 0.875rem;
+    }
+
+    .successAnimation {
+      animation: pulse 0.3s ease-out;
+    }
+  }
+
+  .ratingsStats {
+    .statsTitle {
+      font-size: 1rem;
+      font-weight: 600;
+      color: color('text-primary');
+      margin-bottom: 0.75rem;
+    }
+
+    .statsDescription {
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      color: color('text-secondary');
+    }
+  }
+}
